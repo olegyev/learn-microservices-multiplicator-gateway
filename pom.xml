@@ -14,7 +14,7 @@
     <groupId>learn.microservices</groupId>
     <artifactId>gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gamification</name>
+    <name>gateway</name>
     <description>Demo project for microservices</description>
 
     <properties>
