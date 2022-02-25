@@ -23,6 +23,8 @@ spring:
               - "GET"
               - "POST"
               - "OPTIONS"
+  application:
+    name: gateway
 
 # Uncomment the configuration below if you want to enable route matching logs
 # logging:
