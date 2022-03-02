@@ -2,15 +2,31 @@ server:
   port: 8000
 
 spring:
+  application:
+    name: gateway
   cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    # To start Consul in dev mode, use the following command: consul agent -node=learnmicro -dev
+    # If port is occupied on Windows, use the following commands:
+    # netstat -ano | findstr :<PORT>
+    # taskkill /PID <PID> /F
+    consul:
+      enabled: true
+      discovery:
+        # Get list of the only healthy instances
+        query-passing: true
+        # Uncomment in order to disable the registration of the Gateway service
+        # register: false
     gateway:
       routes:
         - id: multiplicator
-          uri: http://localhost:8080/
+          uri: lb://multiplicator/
           predicates:
             - Path=/challenges/**,/attempts,/attempts/**,/users/**
         - id: gamification
-          uri: http://localhost:8081/
+          uri: lb://gamification/
           predicates:
             - Path=/leaders
       globalcors:
@@ -23,8 +39,14 @@ spring:
               - "GET"
               - "POST"
               - "OPTIONS"
-  application:
-    name: gateway
+    default-filters:
+      # In case of error, the request will be proxied to the next instance, since load balancer is enabled.
+      # For cases if the Consul registry successfully checks the health of a given instance
+      # and that one goes down immediately after
+      - name: Retry
+        args:
+          retries: 3
+          methods: GET,POST
 
 # Uncomment the configuration below if you want to enable route matching logs
 # logging:
