@@ -6,3 +6,8 @@ spring:
         format: yaml
         default-context: defaults
         data-key: application.yml
+
+# Reduce number of log messages if RabbitMQ server is unavailable (e.g. while booting up).
+logging:
+  level:
+    org.springframework.amqp.rabbit.connection.CachingConnectionFactory: WARN
